@@ -122,12 +122,9 @@ public class Gyro_Testing222 extends LinearOpMode
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
         }
-        if(angles.firstAngle > angle){
-
-        }
     }
 
-    boolean onHeading(double speed, double angle, double PCoeff, double initialPosition) {
+    boolean onHeading(double speed, double angle, double errorMult, double initialPosition) {
         double   error ;
         double   steer ;
         boolean  onTarget = false ;
@@ -144,7 +141,7 @@ public class Gyro_Testing222 extends LinearOpMode
             onTarget = true;
         }
         else {
-            steer = getSteer(error, PCoeff);
+            steer = getSteer(error, errorMult);
             rightSpeed  = speed * steer;
             leftSpeed   = -rightSpeed;
         }
@@ -175,12 +172,12 @@ public class Gyro_Testing222 extends LinearOpMode
         return robotError;
     }
 
-    public double getSteer(double error, double PCoeff) {
-        if(error * PCoeff < 0) {
-            return Range.clip(error * PCoeff, -0.5, -0.01);
+    public double clipError(double error, double errorMult) {
+        if(error * errorMult < 0) {
+            return Range.clip(error * errorMult, -0.5, -0.01);
         }
         else {
-            return Range.clip(error * PCoeff, 0.01, 0.5);
+            return Range.clip(error * errorMult, 0.01, 0.5);
         }
     }
 
